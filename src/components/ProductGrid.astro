@@ -1,0 +1,74 @@
+---
+import type { Product } from "../models/Product.ts";
+import ProductCard from "./ProductCard.astro";
+
+interface Props {
+  products: Product[];
+  categories: string[];
+}
+
+const { products, categories } = Astro.props;
+---
+
+<!-- Filter Bar (Astro Island ) -->
+<div class="mb-8">
+  <div class="flex gap-2 items-center">
+    <button
+      class="filter-btn active-filter px-4 py-2 rounded-full text-xs uppercase font-medium border"
+      data-filter="all"
+    >
+      All
+    </button>
+    {
+      categories.map((cat) => (
+        <button
+          class="filter-btn px-4 py-2 rounded-full text-xs uppercase font-medium border border-stone-200 text-stone-600  bg-white"
+          data-filter={cat}
+        >
+          {cat}
+        </button>
+      ))
+    }
+  </div>
+</div>
+
+<!-- Product Grid -->
+<div
+  class="grid grid-cols-4 gap-6"
+>
+  {products.map((product) => <ProductCard product={product} />)}
+</div>
+
+<script>
+  const buttons = document.querySelectorAll<HTMLButtonElement>(".filter-btn");
+  const cards = document.querySelectorAll<HTMLElement>(".product-card");
+
+  function applyFilter(filter: string): void {
+    cards.forEach((card) => {
+      const category = card.dataset.category ?? "";
+      const show = filter === "all" || category === filter;
+      card.style.display = show ? "" : "none";
+    });
+  }
+
+  buttons.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      buttons.forEach((b) => {
+        b.classList.remove("active-filter", "bg-gold-600", "text-white", "border-gold-600");
+        b.classList.add("border-stone-200", "text-stone-600", "bg-white");
+      });
+
+      btn.classList.add("active-filter", "bg-gold-600", "text-white", "border-gold-600");
+      btn.classList.remove("border-stone-200", "text-stone-600", "bg-white");
+
+      applyFilter(btn.dataset.filter ?? "all");
+    });
+  });
+
+  // Initialise "All" button styles
+  const allBtn = document.querySelector<HTMLButtonElement>('[data-filter="all"]');
+  if (allBtn) {
+    allBtn.classList.add("bg-gold-600", "text-white", "border-gold-600");
+    allBtn.classList.remove("border-stone-200", "text-stone-600");
+  }
+</script>

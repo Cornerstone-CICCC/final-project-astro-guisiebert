@@ -1,0 +1,32 @@
+---
+import Layout from "../layouts/Layout.astro";
+import ProductGrid from "../components/ProductGrid.astro";
+import { ProductCatalog } from "../models/ProductCatalog.ts";
+
+const catalog = new ProductCatalog();
+const products = catalog.getAllProducts();
+const categories = catalog.getCategories();
+---
+
+<Layout title="Collection">
+  <!-- Hero -->
+  <section class="bg-white border-b border-stone-100">
+    <div class="max-w-7xl mx-auto px-8 py-20 text-center">
+      <p class="text-xs tracking-widest uppercase text-gold-600 mb-4">Fine Jewellery & Super Expensive Stuff</p>
+      <h1
+        class="text-6xl font-light text-stone-800 mb-6"
+        style="font-family: 'Playfair Display', serif;"
+      >
+        Our Collection
+      </h1>
+      <p class="text-stone-500 text-lg font-light max-w-xl mx-auto ">
+        The kind of stuff you should never wear in streets. Unless you're rich and want to show off.
+      </p>
+    </div>
+  </section>
+
+  <!-- Products -->
+  <section class="max-w-7xl mx-auto px-8 py-14">
+    <ProductGrid products={products} categories={categories} />
+  </section>
+</Layout>
